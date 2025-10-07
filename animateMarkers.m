@@ -1,4 +1,4 @@
-function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
+function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph)
 % helper function designed to plot the position of all N bots and also
 % their control input vectors, for illustration and debug purposes
 %cobbled together from various bits of code
@@ -14,15 +14,20 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     % Tiled layout here
     hFig = figure('Name', 'Robot simulation illustration');
     plotlayout = tiledlayout(1, 2);
+    infolayout = tiledlayout(plotlayout, 2, 1 , 'TileSpacing', 'compact'); %nested layout) 
     t = tiledlayout(plotlayout, 3, 1 , 'TileSpacing', 'compact'); %nested layout
     %t = tiledlayout(3, 1); % top row for bot X-Y, bottom row for input
 
-    title(t, 'Robot positions and control inputs'); % Set global title
+    t.Layout.Tile = 1;
+    infolayout.Layout.Tile = 2;
+
+    title(t, 'Robot positionsk, control signals and loss metrics'); % Set 
+    title(infolayout, 'System state and system graph'); % Set 
 
     %  top subplot is for robot positions
     ax1 = nexttile(t, 1);
     axes(ax1);
-    axis equal;
+    %axis equal;
     grid on;
     hold on;
     %positions chosen to be large enough to accomodate all bot
@@ -67,6 +72,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     % Define colors for all markers and vectors
     colors = lines(max(numMarkers, numVectors));
     %left pannel: plots 
+
     % Initialize marker handles
     markerHandles = gobjects(numMarkers, 1);
     for i = 1:numMarkers
@@ -75,7 +81,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
             'MarkerSize', 10, 'MarkerFaceColor', colors(i,:), 'MarkerEdgeColor', 'k');
 
         labelHandles(i) = text(ax1, pos(1) + 1, pos(2), sprintf('%d', i), ...
-                'Color', colors(i,:), 'FontSize', 6, 'FontWeight', 'bold');
+                'Color', colors(i,:), 'FontSize', 10, 'FontWeight', 'bold');
 
     end
 
@@ -95,14 +101,41 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
         legend(ax3, 'Location', 'eastoutside');
 
     
-    % info collumn on right pannel
-    infoAx = nexttile(plotlayout, 2);
+    % info collumn on top right pannel
+    infoAx = nexttile(infolayout, 1);
+    
+    %infoAx = nextile(infolayout, 2);
     axes(infoAx);
     axis off;
-    title(infoAx, 'Current state of robots and control inputs');
+    %title(infoAx, 'Current state of robots and control inputs');
     infoTextHandle = text(infoAx, 0, 1, '', ...
          'FontSize', 16,   'FontName', 'Arial', ...
         'VerticalAlignment', 'top', 'HorizontalAlignment', 'left');
+
+        % graph
+    graphAx = nexttile(infolayout, 2);
+    axes(graphAx);
+    axis off;
+    title(graphAx, 'System graph');
+
+    % Plot the graph into ax2
+    nodeLabels = arrayfun(@(i) sprintf('Bot %d', i), 1:numMarkers, 'UniformOutput', false);
+    hGraph = plot(graphAx, Dgraph, 'Layout', 'circle', ...
+        'NodeLabel', nodeLabels, ... 
+        'NodeColor', 'red', ...
+        'EdgeColor', 'white', ...
+        'ArrowSize', 16, ...
+        'LineWidth', 3, ...
+        'MarkerSize', 16);
+    hGraph.Parent.Color = [0.1 0.1 0.1]
+
+
+
+       
+
+
+
+    
     
 
 
@@ -172,6 +205,14 @@ end
 
     % Update info box
     infoTextHandle.String = sprintf([
+        '    Timestep  %d\n\n' ...
+        '    ### Robot Positions ###\n%s\n' ...
+        '    ### Control Inputs ###\n%s\n' ...
+        '    ### Scores ###\n%s\n'], ...
+        step, robotStr, controlStr, scoreStr);
+
+    %draw directed graph
+     infoTextHandle.String = sprintf([
         '    Timestep  %d\n\n' ...
         '    ### Robot Positions ###\n%s\n' ...
         '    ### Control Inputs ###\n%s\n' ...

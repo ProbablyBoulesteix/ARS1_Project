@@ -27,16 +27,16 @@ simulationTime = 2000; %number of timesteps to simulate
 %% define swarm parameters 
 % define connection graph between agents in inbound terms (ie if agent 1
 % recieves data from agents 2, 4 and 5 write [2,4,5]
-connectionTo1 = [2,3,4,5];
-connectionTo2 = [1,3,4,5];
-connectionTo3 = [1,2,4,5];
-connectionTo4 = [1,2,3,5];
-connectionTo5 = [1,2,3,4];
+connectionTo1 = [1,2,3,4,5];
+connectionTo2 = [1,2,3,4,5];
+connectionTo3 = [1,2,3,4,5];
+connectionTo4 = [1,2,3,4,5];
+connectionTo5 = [1,2,3,4,5];
 connectionLinks = {connectionTo1, connectionTo2, connectionTo3, connectionTo4, connectionTo5}; %build list of all relations here
 
 %set gains here (tune later)
-alphas = [1, 1, 1, 1, 1]*0.005;
-coopGains = [1, 1, 1, 1, 1] * 0.3 %use unity gain to start
+alphas = [1, 1, 1, 1, 1]*0.00;
+coopGains = [1, 1, 1, 1, 1] * 0.35 %use unity gain to start
 
 
 % define connection matrix
@@ -121,4 +121,9 @@ agent3control = extract_Ncoords(controlInputs, 3) * vectorScalingFactor;
 agent4control = extract_Ncoords(controlInputs, 4) * vectorScalingFactor;
 agent5control = extract_Ncoords(controlInputs, 5) * vectorScalingFactor;
 
-animateMarkers({agenttraj1, agenttraj2, agenttraj3, agenttraj4, agenttraj5}, 0.005, {agent1control, agent2control, agent3control, agent4control, agent5control}, Jscore);
+systemGraph = drawDirectedGraph(G)
+
+animateMarkers({agenttraj1, agenttraj2, agenttraj3, agenttraj4, agenttraj5}, 0.005, {agent1control, agent2control, agent3control, agent4control, agent5control}, Jscore, systemGraph);
+
+%% draw directed graph of system
+drawDirectedGraph(G)

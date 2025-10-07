@@ -11,14 +11,14 @@ for i = 1:N
         rj_star = coords_desired(j,:);
         ri = coords_actual(i,:);
         rj = coords_actual(j,:);
-        diff_ij = G_connections(i,j) * gains(i) * (ri + cell2mat(formation_matrix(i,j)) - rj);
+        diff_ij = G_connections(i,j)  *gains(i)* (ri + cell2mat(formation_matrix(i,j)) - rj);
         
         
         diff_i = diff_i+ diff_ij; % sum of consensus terms
     end
     %disp(class(diff_i))
 
-    output_array(i,:) = diff_i; % store result in cell
+    output_array(i,:) =  diff_i; % store result in cell
 end
 
 summed_component = output_array;

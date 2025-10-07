@@ -1,4 +1,4 @@
-function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
+function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph)
 % helper function designed to plot the position of all N bots and also
 % their control input vectors, for illustration and debug purposes
 %cobbled together from various bits of code
@@ -14,8 +14,12 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     % Tiled layout here
     hFig = figure('Name', 'Robot simulation illustration');
     plotlayout = tiledlayout(1, 2);
+    infolayout = tiledlayout(plotlayout, 2, 1 , 'TileSpacing', 'compact'); %nested layout) 
     t = tiledlayout(plotlayout, 3, 1 , 'TileSpacing', 'compact'); %nested layout
     %t = tiledlayout(3, 1); % top row for bot X-Y, bottom row for input
+
+    t.Layout.Tile = 1;
+    infolayout.Layout.Tile = 2;
 
     title(t, 'Robot positions and control inputs'); % Set global title
 
@@ -39,8 +43,8 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     
     grid on;
     hold on;
-    xlim([-max(cell2mat(vectorDataList), max(cell2mat(vectorDataList))]);
-    ylim([-2, max(cell2mat(vectorDataList))]);
+    xlim([-4, 4]);
+    ylim([-4, 4]);
 
     xlabel('Ux');
     ylabel('Uy');
@@ -95,14 +99,34 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
         legend(ax3, 'Location', 'eastoutside');
 
     
-    % info collumn on right pannel
-    infoAx = nexttile(plotlayout, 2);
+    % info collumn on top right pannel
+    infoAx = nexttile(infolayout, 1);
+    %infoAx = nextile(infolayout, 2);
     axes(infoAx);
     axis off;
     title(infoAx, 'Current state of robots and control inputs');
     infoTextHandle = text(infoAx, 0, 1, '', ...
-         'FontSize', 10, 'FontName', 'Courier', ...
+         'FontSize', 16,   'FontName', 'Arial', ...
         'VerticalAlignment', 'top', 'HorizontalAlignment', 'left');
+
+        % graph
+    graphAx = nexttile(infolayout, 2);
+    axes(graphAx);
+    axis off;
+    title(graphAx, 'System graph');
+
+    % Plot the graph into ax2
+    hGraph = plot(ax2, G, 'Layout', 'force', ...
+        'NodeColor', 'lightblue', ...
+        'EdgeColor', 'black', ...
+        'ArrowSize', 12, ...
+        'LineWidth', 1.5, ...
+    'MarkerSize', 8, ...
+    'LabelTextColor', 'black');
+
+title(ax2, 'Directed Graph');
+
+    
     
 
 
@@ -164,7 +188,7 @@ end
     scoreStr = '';
     if step <= numel(Jscore) && ~isempty(Jscore{step})
         currentScores = Jscore{step};
-        scoreStr = sprintf('Position: %.2f   Formation: %.2f   Aggregate: %.2f', ...
+        scoreStr = sprintf('Position: %.2f \nFormation: %.2f   \nWeighted: %.2f', ...
         currentScores(1), currentScores(2), currentScores(3));
     end
 
@@ -172,10 +196,18 @@ end
 
     % Update info box
     infoTextHandle.String = sprintf([
-        '    Timestep: %d\n\n' ...
-        '    Robot Positions:\n%s\n' ...
-        '    Control Inputs:\n%s\n' ...
-        '    Scores:\n%s\n'], ...
+        '    Timestep  %d\n\n' ...
+        '    ### Robot Positions ###\n%s\n' ...
+        '    ### Control Inputs ###\n%s\n' ...
+        '    ### Scores ###\n%s\n'], ...
+        step, robotStr, controlStr, scoreStr);
+
+    %draw directed graph
+     infoTextHandle.String = sprintf([
+        '    Timestep  %d\n\n' ...
+        '    ### Robot Positions ###\n%s\n' ...
+        '    ### Control Inputs ###\n%s\n' ...
+        '    ### Scores ###\n%s\n'], ...
         step, robotStr, controlStr, scoreStr);
 
 

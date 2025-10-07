@@ -14,7 +14,7 @@ function [input] = controlLaw(agent_coords, agent_destinations, alphas, Kgains, 
         consensus_u(i,:) = s(i);
         destination_u(i,:) =  destination_u(i,:)*alphas(i);
     end    
-       
+    consensus_u;
     u =  - destination_u - consensus_u; 
     input = u;
 end
