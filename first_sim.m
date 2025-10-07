@@ -4,13 +4,13 @@ clear;
 %% define basic params of config
 % definining hard coded arrays of start and end positions here, might fix later
 start_positions = [2,3; -1,-3;  -5,0; -8,-3;  -11,-3];
-stop_positions = [50, 0; 46, 0; 42, 0; 38, 8; 34, 0];
+stop_positions = [50, 0; 46, 0; 42, 0; 38, 0; 34, 0];
 distance_formation_desired = [-4,0];
 
 %define properties of swarm
 numAagents = 5;
-agentIDs = 1:1:5
-swarmLeaderID = 1 % ID of leading bot
+agentIDs = 1:1:5;
+swarmLeaderID = 1; % ID of leading bot
 
 
 %% define swarm parameters 
@@ -24,8 +24,8 @@ connectionTo5 = [1,2,3,4];
 connectionLinks = {connectionTo1, connectionTo2, connectionTo3, connectionTo4, connectionTo5}; %build list of all relations here
 
 %set gains here (tune later)
-alphas = [1, 1, 1, 1, 1]*0.5;
-coopGains = ones(numAagents, numAagents)*0.0001; %use unity gain to start
+alphas = [1, 1, 1, 1, 1]*0;
+coopGains = ones(numAagents, numAagents)*0.001; %use unity gain to start
 
 
 % define connection matrix
@@ -74,7 +74,7 @@ while true
 
     else
     %increment here
-        delta = controlLaw(agent_coords{t - 1}, stop_positions, 0.1, coopGains, G, distance_formation_desired);
+        delta = controlLaw(agent_coords{t - 1}, stop_positions, alphas, coopGains, G, distance_formation_desired);
         agent_coords{t} = agent_coords{t - 1} + delta;
         t = t + 1;
     end

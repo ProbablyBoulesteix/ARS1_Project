@@ -39,8 +39,8 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     
     grid on;
     hold on;
-    xlim([-4, 4]);
-    ylim([-4, 4]);
+    xlim([-max(cell2mat(vectorDataList), max(cell2mat(vectorDataList))]);
+    ylim([-2, max(cell2mat(vectorDataList))]);
 
     xlabel('Ux');
     ylabel('Uy');
@@ -101,7 +101,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore)
     axis off;
     title(infoAx, 'Current state of robots and control inputs');
     infoTextHandle = text(infoAx, 0, 1, '', ...
-         'FontSize', 16,   'FontName', 'Arial', ...
+         'FontSize', 10, 'FontName', 'Courier', ...
         'VerticalAlignment', 'top', 'HorizontalAlignment', 'left');
     
 
@@ -164,7 +164,7 @@ end
     scoreStr = '';
     if step <= numel(Jscore) && ~isempty(Jscore{step})
         currentScores = Jscore{step};
-        scoreStr = sprintf('Position: %.2f \nFormation: %.2f   \nWeighted: %.2f', ...
+        scoreStr = sprintf('Position: %.2f   Formation: %.2f   Aggregate: %.2f', ...
         currentScores(1), currentScores(2), currentScores(3));
     end
 
@@ -172,10 +172,10 @@ end
 
     % Update info box
     infoTextHandle.String = sprintf([
-        '    Timestep  %d\n\n' ...
-        '    ### Robot Positions ###\n%s\n' ...
-        '    ### Control Inputs ###\n%s\n' ...
-        '    ### Scores ###\n%s\n'], ...
+        '    Timestep: %d\n\n' ...
+        '    Robot Positions:\n%s\n' ...
+        '    Control Inputs:\n%s\n' ...
+        '    Scores:\n%s\n'], ...
         step, robotStr, controlStr, scoreStr);
 
 
