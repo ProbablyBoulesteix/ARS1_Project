@@ -18,8 +18,8 @@ aloss = 0;
 
 
 if isempty(weights)
-    w1 = 1;
-    w2 = 2;
+    w1 = 0.5;
+    w2 = 0.5;
 else
     w1 = weights(1);
     w2 = weights(2);

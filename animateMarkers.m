@@ -21,7 +21,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     t.Layout.Tile = 1;
     infolayout.Layout.Tile = 2;
 
-    title(t, 'Robot positionsk, control signals and loss metrics'); % Set 
+    title(t, 'Robot positions, control signals and loss metrics'); % Set 
     title(infolayout, 'System state and system graph'); % Set 
 
     %  top subplot is for robot positions
@@ -44,8 +44,8 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     
     grid on;
     hold on;
-    xlim([-4, 4]);
-    ylim([-4, 4]);
+    xlim([-2, 2]);
+    ylim([-2, 2]);
 
     xlabel('Ux');
     ylabel('Uy');
@@ -62,7 +62,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     ylabel('Score');
     title('Losses');
     xlim([-10, numSteps])
-    ylim([-10, numSteps])
+    
 
     % Set up key press detection so matlab doesn't yell at me about
     % pressing STOP
@@ -70,7 +70,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     set(hFig, 'KeyPressFcn', @(src, event) keyCallback(event));
 
     % Define colors for all markers and vectors
-    colors = lines(max(numMarkers, numVectors));
+    colors = lines(max(max(numMarkers, numVectors), numScores));
     %left pannel: plots 
 
     % Initialize marker handles
@@ -93,7 +93,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
         elseif i == 2
             scorename = 'Formation loss';
         elseif i == 3
-            scorename = 'Aggregate/weighted loss';
+            scorename = 'Weighted loss';
         end
         scoreHandles(i) = plot(ax3, NaN, NaN, '-', ...
             'Color', colors(i,:), 'LineWidth', 4, 'DisplayName', scorename);
@@ -109,7 +109,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     axis off;
     %title(infoAx, 'Current state of robots and control inputs');
     infoTextHandle = text(infoAx, 0, 1, '', ...
-         'FontSize', 16,   'FontName', 'Arial', ...
+         'FontSize', 12,   'FontName', 'Arial', ...
         'VerticalAlignment', 'top', 'HorizontalAlignment', 'left');
 
         % graph
@@ -129,14 +129,6 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
         'MarkerSize', 16);
     hGraph.Parent.Color = [0.1 0.1 0.1]
 
-
-
-       
-
-
-
-    
-    
 
 
     % Initialize vector handles
