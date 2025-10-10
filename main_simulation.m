@@ -29,7 +29,7 @@ numAgents = 5;
 
 %scoring params
 scoring_weights = [0.5, 0.5]; %determine how much to penalize being out of place (1) vs out of position (2) 
-aggScoreThreshold = 0.1; %define score at which we change waypoints -> set to 0 if waypoint should never change, or simply dont specify a second stopover set in destinations
+aggScoreThreshold = 0; %define score at which we change waypoints -> set to 0 if waypoint should never change, or simply dont specify a second stopover set in destinations
 
 % gains for system, should have as many entries as agents
 alphas = [1, 1, 1, 1, 1]*0.05; % for position control, where higher gain = more incentive to reach position (can overshoot or compromise formation)
@@ -51,7 +51,7 @@ connectionLinks = {connectionFrom1, connectionFrom2, connectionFrom3, connection
 %connectionLinks = {[], [1], [1], [1],[3]}; 
 
 %sim settings
-simulationTime = 200; %number of timesteps to simulate
+simulationTime = 150; %number of timesteps to simulate
 simulation_displayPeriod = 0.025; %the interval period used when updating the sim display...use larger values for slower motion (but motion looks less smooth)
 
 % Additionnal artificial caps
@@ -154,3 +154,6 @@ animateMarkers(agenttrajectories, simulation_displayPeriod, agentcontrols, Jscor
 
 %% draw directed graph of system
 %drawDirectedGraph(G, true)
+
+%% make a plot of the trajectories
+plotAgentTrajectories(agenttrajectories, start_positions, stop_positions, numAgents)
