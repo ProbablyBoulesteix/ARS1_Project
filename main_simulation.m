@@ -33,7 +33,7 @@ aggScoreThreshold = 0; %define score at which we change waypoints -> set to 0 if
 
 % gains for system, should have as many entries as agents
 alphas = [1, 1, 1, 1, 1]*0.05; % for position control, where higher gain = more incentive to reach position (can overshoot or compromise formation)
-coopGains = [1, 1, 1, 1, 1]*0.2 ; %for consensus/formation, control, where higher gain = more incentive to get into formation (can become unstable at higher values)
+coopGains = [1, 1, 1, 1, 1]*0.05 ; %for consensus/formation, control, where higher gain = more incentive to get into formation (can become unstable at higher values)
 
 
 % asked to form a line but destinations are randomy placed, this will
@@ -51,12 +51,15 @@ connectionLinks = {connectionFrom1, connectionFrom2, connectionFrom3, connection
 %connectionLinks = {[], [1], [1], [1],[3]}; 
 
 %sim settings
-simulationTime = 150; %number of timesteps to simulate
-simulation_displayPeriod = 0.025; %the interval period used when updating the sim display...use larger values for slower motion (but motion looks less smooth)
+simulationTime = 120; %number of timesteps to simulate
+simulation_displayPeriod = 0.01; %the interval period used when updating the sim display...use larger values for slower motion (but motion looks less smooth)
 
 % Additionnal artificial caps
-maxControlAuthority_abs = 1; %defines a limit to the magntitude of the control input we can provide,  Set to Inf for no limit
+maxControlAuthority_abs = Inf; %defines a limit to the magntitude of the control input we can provide,  Set to Inf for no limit
 limitMode = 'coupled' ; %two modes available, 'coupled' (limit total speed) and 'decoupled' (limit speed along each individual axis)
+
+%fitness display scaling factor
+scoreScaling = [1, 10, 1]; %scale position, formation and weighted scores for display
 
 %% Intermediary setup
 agentIDs = 1:1:numAgents;
@@ -150,7 +153,7 @@ end
 % make system graph for display
 systemGraph = drawDirectedGraph(G, false)
 
-animateMarkers(agenttrajectories, simulation_displayPeriod, agentcontrols, Jscore, systemGraph);
+animateMarkers(agenttrajectories, simulation_displayPeriod, agentcontrols, Jscore, systemGraph, scoreScaling);
 
 %% draw directed graph of system
 %drawDirectedGraph(G, true)

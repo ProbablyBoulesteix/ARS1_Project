@@ -57,14 +57,11 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
     
     grid on;
     hold on;
-    %axis equal;
 %plot all scores for the swarm
     xlabel('Timestep');
-    ylabel('Fitness');
-    title('Position and formation fitness');
-    xlim([0, numSteps-1])
-    xTickSpacing = 10;
-    xticks(0:xTickSpacing:numSteps-1);
+    ylabel('Score');
+    title('Losses');
+    xlim([-10, numSteps])
     
 
     % Set up key press detection so matlab doesn't yell at me about
@@ -92,16 +89,16 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
         scoreHandles = gobjects(numScores, 1);
     for i = 1:numScores
         if i == 1
-            scorename = sprintf('Position loss [x%.d]', scoreDisplay(i));
+            scorename = 'Position loss';
         elseif i == 2
-            scorename = sprintf('Formation loss [x%.d]', scoreDisplay(i));
+            scorename = 'Formation loss';
         elseif i == 3
-            scorename = sprintf('Weighted loss [x%.d]', scoreDisplay(i));
+            scorename = 'Weighted loss';
         end
         scoreHandles(i) = plot(ax3, NaN, NaN, '-', ...
             'Color', colors(i,:), 'LineWidth', 4, 'DisplayName', scorename);
     end
-        legend(ax3);
+        legend(ax3, 'Location', 'eastoutside');
 
     
     % info collumn on top right pannel
@@ -167,7 +164,7 @@ function animateMarkersWithVectors(waypoints, dt, vectorDataList, Jscore, Dgraph
 
             for i = 1:3
                 set(scoreHandles(i), 'XData', 1:size(scoreHistory, 1), ...
-                             'YData', scoreHistory(:, i) * scoreDisplay(i));
+                             'YData', scoreHistory(:, i) * score);
     end
 end
 
@@ -192,7 +189,6 @@ end
     scoreStr = '';
     if step <= numel(Jscore) && ~isempty(Jscore{step})
         currentScores = Jscore{step};
-        
         scoreStr = sprintf('Position: %.2f \nFormation: %.2f   \nWeighted: %.2f', ...
         currentScores(1), currentScores(2), currentScores(3));
     end

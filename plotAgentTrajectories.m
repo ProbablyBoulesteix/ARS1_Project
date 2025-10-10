@@ -4,7 +4,7 @@
 function plotAgentTrajectories(positions, startPositions, destinationPositions, numAgents)
 
     % Number of timesteps
-    numSteps = size(positions{1},1); %should be equal to the number of timesteps
+    numSteps = size(positions{1},1) %should be equal to the number of timesteps
 
     % Preallocate arrays for trajectories
     trajectoriesX = zeros(numAgents, numSteps);
@@ -12,9 +12,10 @@ function plotAgentTrajectories(positions, startPositions, destinationPositions, 
 
     % Extract trajectories
     for i = 1:numAgents
+        
         agentpositions_i = positions{i};
-        trajectoriesX(i, :) = agentpositions_i(:, 1); % X coordinates
-        trajectoriesY(i, :) = agentpositions_i(:, 2); % Y coordinates
+        trajectoriesX(i, :) = agentpositions_i(:, 1)'; % X coordinates
+        trajectoriesY(i, :) = agentpositions_i(:, 2)'; % Y coordinates
 
     end
 
